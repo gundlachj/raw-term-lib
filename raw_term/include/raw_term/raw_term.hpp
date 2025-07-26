@@ -18,7 +18,7 @@ public:
 
   void setFlag(int f_num);
 
-  void readByte(char *c);
+  void readKeyPress(char *c);
 
   virtual void eventLoop();
 };

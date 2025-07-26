@@ -173,7 +173,7 @@ void RawTerminal::disableRawMode() {
   }
 }
 
-void readByte(char *c) {
+void readKeyPress(char *c) {
   // Read 1 byte into the variable c
   // If there is an error, panic
   // and exit the program.
