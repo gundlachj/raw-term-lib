@@ -1,0 +1,2 @@
+/usr/bin/ar qc libraw_term.a CMakeFiles/raw_term.dir/src/raw_term.cpp.o
+/usr/bin/ranlib libraw_term.a
