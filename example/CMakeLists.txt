@@ -1,7 +1,12 @@
 project(example)
 
 # Create the executable
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/terminal.cpp)
+
+# Add header files
+target_include_directories( ${PROJECT_NAME}
+  PUBLIC ${PROJECT_SOURCE_DIR}/include/
+)
 
 # Link the static library from lib
 # using its alias raw_term::lib.

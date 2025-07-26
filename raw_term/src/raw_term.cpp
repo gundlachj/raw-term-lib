@@ -1,18 +1,16 @@
 #include "raw_term/logging.hpp"
 #include "raw_term/raw_term.hpp"
 
+#include <cctype>
 #include <cerrno>
+#include <cstdio>
 
 #include <termios.h>
 #include <unistd.h>
 
-RawTerminal::RawTerminal() {
-  enableRawMode();
-}
+RawTerminal::RawTerminal() { enableRawMode(); }
 
-RawTerminal::~RawTerminal() {
-  disableRawMode();
-}
+RawTerminal::~RawTerminal() { disableRawMode(); }
 
 void RawTerminal::enableRawMode() {
   // Get the user's original
@@ -123,7 +121,6 @@ void RawTerminal::enableRawMode() {
   // SIGSTP (Ctrl-Z) signals.
   raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
 
-
   // c_cc is an attribute
   // that sets various
   // control characters.
@@ -173,7 +170,34 @@ void RawTerminal::disableRawMode() {
   }
 }
 
-void readKeyPress(char *c) {
+// TODO: Implement configuration for setting flags
+void RawTerminal::setFlag(int f_num) {}
+
+// TODO: Implement an actual display
+void RawTerminal::display(char screen) {
+  // iscntrl checks if the char
+  // is a nonprintable control
+  // ASCII character (0-31, 127).
+  if (iscntrl(screen)) {
+    // Prints the char in its
+    // decimal representation.
+    //
+    // Need to add carriage returns
+    // as OPOST is disabled.
+    printf("%d\r\n", screen);
+  } else {
+    // Prints the char in both
+    // decimal and character
+    // representation.
+    //
+    // Need to add carriage returns
+    // as OPOST is disabled.
+    printf("%d ('%c')\r\n", screen, screen);
+  }
+}
+
+char RawTerminal::readKeyPress() {
+  char c;
   // Read 1 byte into the variable c
   // If there is an error, panic
   // and exit the program.
@@ -182,7 +206,21 @@ void readKeyPress(char *c) {
   if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) {
     panic("read");
   }
+
+  return c;
 }
 
-// TODO: Implement configuration for setting flags
-void RawTerminal::setFlag(int f_num) {}
+void RawTerminal::run() {
+  start();
+  this->running = true;
+  while (this->running) {
+    // TODO: Implement time frames system
+    update();
+  }
+}
+
+void RawTerminal::stop() { this->running = false; }
+
+void RawTerminal::start() {}
+
+void RawTerminal::update() {}

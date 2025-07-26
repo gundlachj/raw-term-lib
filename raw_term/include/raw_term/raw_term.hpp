@@ -9,18 +9,29 @@ private:
   // terminal attributes.
   termios orig_termios;
 
-public:
-  RawTerminal();
-  virtual ~RawTerminal();
+  bool running;
 
   void enableRawMode();
   void disableRawMode();
 
+  virtual void start();
+
+  virtual void update();
+
+public:
+  RawTerminal();
+  virtual ~RawTerminal();
+
   void setFlag(int f_num);
 
-  void readKeyPress(char *c);
+  // TODO: Implement a screen class
+  void display(char screen);
 
-  virtual void eventLoop();
+  char readKeyPress();
+
+  void run();
+
+  void stop();
 };
 
 #endif /* end of include guard: __RAW_TERM_H__ */
