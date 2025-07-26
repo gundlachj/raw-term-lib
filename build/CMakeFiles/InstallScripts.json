@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/jgundlach/pulsar-projects/cpp-raw-term-lib/build/cmake_install.cmake",
-		"/Users/jgundlach/pulsar-projects/cpp-raw-term-lib/build/example/cmake_install.cmake",
-		"/Users/jgundlach/pulsar-projects/cpp-raw-term-lib/build/raw_term/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
