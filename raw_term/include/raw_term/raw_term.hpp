@@ -1,9 +1,13 @@
 #ifndef __RAW_TERM_H__
 #define __RAW_TERM_H__
 
+#include <termios.h>
+
 class RawTerminal {
 private:
-  struct termios orig_termios;
+  // The user's original
+  // terminal attributes.
+  termios orig_termios;
 
 public:
   RawTerminal();
