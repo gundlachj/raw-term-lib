@@ -1,9 +1,7 @@
 #include "raw_term/logging.hpp"
 #include "raw_term/raw_term.hpp"
 
-#include <cctype>
 #include <cerrno>
-#include <cstdlib>
 
 #include <termios.h>
 #include <unistd.h>
@@ -172,6 +170,17 @@ void RawTerminal::disableRawMode() {
   // and exit the program.
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->orig_termios) == -1) {
     panic("tcsetattr");
+  }
+}
+
+void readInput(char *c) {
+  // Read 1 byte into the variable c
+  // If there is an error, panic
+  // and exit the program.
+  // Checking for EAGAIN allows
+  // proper handling in Cygwin.
+  if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) {
+    panic("read");
   }
 }
 
