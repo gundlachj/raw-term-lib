@@ -175,4 +175,5 @@ void RawTerminal::disableRawMode() {
   }
 }
 
+// TODO: Implement configuration for setting flags
 void RawTerminal::setFlag(int f_num) {}
