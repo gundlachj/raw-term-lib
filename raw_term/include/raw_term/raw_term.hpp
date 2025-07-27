@@ -24,7 +24,6 @@ public:
 
   void setFlag(int f_num);
 
-  // TODO: Implement a screen class
   void display(char screen);
 
   char readKeyPress();

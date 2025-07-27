@@ -87,6 +87,10 @@ void RawTerminal::enableRawMode() {
   // the post-processing
   // of carriage return
   // and newline characters.
+  //
+  // TODO: The OPOST flag
+  // does not reset after
+  // the program exits.
   raw.c_oflag &= ~(OPOST);
 
   // c_cflag is an attribute
