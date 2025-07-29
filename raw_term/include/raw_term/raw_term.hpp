@@ -15,8 +15,8 @@ private:
 
   bool rawModeEnabled = false;
 
-  unsigned short screen_rows;
-  unsigned short screen_cols;
+  int screen_rows;
+  int screen_cols;
 
   void enableRawMode();
   void disableRawMode();
@@ -39,6 +39,8 @@ public:
   void display(const char *screen);
 
   void readKeyPress(char *c);
+
+  int getCursorPosition(int *row, int *col);
 
   void run();
 
