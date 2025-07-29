@@ -2,7 +2,6 @@
 #define __RAW_TERM_H__
 
 #include <termios.h>
-#include <string>
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
@@ -16,8 +15,13 @@ private:
 
   bool rawModeEnabled = false;
 
+  unsigned short screen_rows;
+  unsigned short screen_cols;
+
   void enableRawMode();
   void disableRawMode();
+
+  int getWindowSize();
 
   virtual void start();
 
@@ -32,7 +36,7 @@ public:
   void refreshScreen();
 
   void display(const char screen);
-  void display(const std::string screen);
+  void display(const char *screen);
 
   void readKeyPress(char *c);
 

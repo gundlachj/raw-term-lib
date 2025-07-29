@@ -7,13 +7,15 @@
 
 #include <termios.h>
 #include <unistd.h>
-
-#include <iostream>
-#include <string>
+#include <sys/ioctl.h>
 
 RawTerminal::RawTerminal() {
   if (!this->rawModeEnabled) {
     enableRawMode();
+  }
+
+  if (getWindowSize() == -1) {
+    panic("window size");
   }
 }
 
@@ -185,6 +187,17 @@ void RawTerminal::disableRawMode() {
   this->rawModeEnabled = false;
 }
 
+int RawTerminal::getWindowSize() {
+  struct winsize ws;
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
+    return -1;
+  }
+
+  this->screen_cols = ws.ws_col;
+  this->screen_rows = ws.ws_row;
+  return 0;
+}
+
 // TODO: Implement configuration for setting flags
 void RawTerminal::setFlag(int f_num) {}
 
@@ -227,8 +240,8 @@ void RawTerminal::display(const char screen) {
   }
 }
 
-void RawTerminal::display(const std::string screen) {
-  std::cout << screen << '\r' << '\n';
+void RawTerminal::display(const char *screen) {
+  printf("%s\r\n", screen);
 }
 
 void RawTerminal::run() {
