@@ -3,13 +3,19 @@
 
 #include <termios.h>
 
+#ifndef CTRL_KEY
+#define CTRL_KEY(k) ((k) & 0x1f)
+#endif
+
 class RawTerminal {
 private:
   // The user's original
   // terminal attributes.
   termios orig_termios;
 
-  bool running;
+  bool running = false;
+
+  bool rawModeEnabled = false;
 
   void enableRawMode();
   void disableRawMode();

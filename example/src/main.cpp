@@ -8,5 +8,7 @@ int main(int argc, char const *argv[]) {
   Terminal *terminal = new Terminal();
   terminal->run();
 
+  delete terminal;
+
   return 0;
 }

@@ -8,9 +8,17 @@
 #include <termios.h>
 #include <unistd.h>
 
-RawTerminal::RawTerminal() { enableRawMode(); }
+RawTerminal::RawTerminal() {
+  if (!this->rawModeEnabled) {
+    enableRawMode();
+  }
+}
 
-RawTerminal::~RawTerminal() { disableRawMode(); }
+RawTerminal::~RawTerminal() {
+  if (this->rawModeEnabled) {
+    disableRawMode();
+  }
+}
 
 void RawTerminal::enableRawMode() {
   // Get the user's original
@@ -23,7 +31,7 @@ void RawTerminal::enableRawMode() {
 
   // Get the original terminal
   // as a termios struct.
-  struct termios raw = orig_termios;
+  struct termios raw = this->orig_termios;
 
   //
   // Default Termios Flags
@@ -162,6 +170,8 @@ void RawTerminal::enableRawMode() {
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
     panic("tcsetattr");
   }
+
+  this->rawModeEnabled = true;
 }
 
 void RawTerminal::disableRawMode() {
@@ -172,6 +182,8 @@ void RawTerminal::disableRawMode() {
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &this->orig_termios) == -1) {
     panic("tcsetattr");
   }
+
+  this->rawModeEnabled = false;
 }
 
 // TODO: Implement configuration for setting flags
@@ -223,7 +235,12 @@ void RawTerminal::run() {
   }
 }
 
-void RawTerminal::stop() { this->running = false; }
+void RawTerminal::stop() {
+  this->running = false;
+  if (this->rawModeEnabled) {
+    disableRawMode();
+  }
+}
 
 void RawTerminal::start() {}
 
