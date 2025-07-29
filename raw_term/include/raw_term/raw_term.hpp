@@ -29,6 +29,8 @@ public:
 
   void setFlag(int f_num);
 
+  void refreshScreen();
+
   void display(const char screen);
   void display(const std::string screen);
 

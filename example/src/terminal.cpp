@@ -3,6 +3,8 @@
 void Terminal::start() {}
 
 void Terminal::update() {
+  refreshScreen();
+
   char c;
   readKeyPress(&c);
   display(c);

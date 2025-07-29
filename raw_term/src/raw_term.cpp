@@ -188,6 +188,22 @@ void RawTerminal::disableRawMode() {
 // TODO: Implement configuration for setting flags
 void RawTerminal::setFlag(int f_num) {}
 
+void RawTerminal::readKeyPress(char *c) {
+  // Read 1 byte into the variable c
+  // If there is an error, panic
+  // and exit the program.
+  // Checking for EAGAIN allows
+  // proper handling in Cygwin.
+  if (read(STDIN_FILENO, c, 1) == -1 && errno != EAGAIN) {
+    panic("read");
+  }
+}
+
+void RawTerminal::refreshScreen() {
+  write(STDOUT_FILENO, "\x1b[2J", 4);
+  write(STDOUT_FILENO, "\x1b[H", 3);
+}
+
 // TODO: Implement an actual display
 void RawTerminal::display(const char screen) {
   // iscntrl checks if the char
@@ -213,17 +229,6 @@ void RawTerminal::display(const char screen) {
 
 void RawTerminal::display(const std::string screen) {
   std::cout << screen << '\r' << '\n';
-}
-
-void RawTerminal::readKeyPress(char *c) {
-  // Read 1 byte into the variable c
-  // If there is an error, panic
-  // and exit the program.
-  // Checking for EAGAIN allows
-  // proper handling in Cygwin.
-  if (read(STDIN_FILENO, c, 1) == -1 && errno != EAGAIN) {
-    panic("read");
-  }
 }
 
 void RawTerminal::run() {
