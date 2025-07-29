@@ -2,6 +2,7 @@
 #define __RAW_TERM_H__
 
 #include <termios.h>
+#include <string>
 
 #ifndef CTRL_KEY
 #define CTRL_KEY(k) ((k) & 0x1f)
@@ -30,9 +31,10 @@ public:
 
   void setFlag(int f_num);
 
-  void display(char screen);
+  void display(const char screen);
+  void display(const std::string screen);
 
-  char readKeyPress();
+  void readKeyPress(char *c);
 
   void run();
 

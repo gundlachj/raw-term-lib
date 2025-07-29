@@ -3,10 +3,13 @@
 void Terminal::start() {}
 
 void Terminal::update() {
-  char c = readKeyPress();
+  char c;
+  readKeyPress(&c);
   display(c);
 
   if (c == 'q') {
+    display("Quitting.");
     stop();
   }
+  c = 0;
 }

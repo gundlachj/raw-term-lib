@@ -8,6 +8,9 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <iostream>
+#include <string>
+
 RawTerminal::RawTerminal() {
   if (!this->rawModeEnabled) {
     enableRawMode();
@@ -95,10 +98,6 @@ void RawTerminal::enableRawMode() {
   // the post-processing
   // of carriage return
   // and newline characters.
-  //
-  // TODO: The OPOST flag
-  // does not reset after
-  // the program exits.
   raw.c_oflag &= ~(OPOST);
 
   // c_cflag is an attribute
@@ -190,7 +189,7 @@ void RawTerminal::disableRawMode() {
 void RawTerminal::setFlag(int f_num) {}
 
 // TODO: Implement an actual display
-void RawTerminal::display(char screen) {
+void RawTerminal::display(const char screen) {
   // iscntrl checks if the char
   // is a nonprintable control
   // ASCII character (0-31, 127).
@@ -212,18 +211,19 @@ void RawTerminal::display(char screen) {
   }
 }
 
-char RawTerminal::readKeyPress() {
-  char c;
+void RawTerminal::display(const std::string screen) {
+  std::cout << screen << '\r' << '\n';
+}
+
+void RawTerminal::readKeyPress(char *c) {
   // Read 1 byte into the variable c
   // If there is an error, panic
   // and exit the program.
   // Checking for EAGAIN allows
   // proper handling in Cygwin.
-  if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) {
+  if (read(STDIN_FILENO, c, 1) == -1 && errno != EAGAIN) {
     panic("read");
   }
-
-  return c;
 }
 
 void RawTerminal::run() {
