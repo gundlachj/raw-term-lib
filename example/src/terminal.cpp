@@ -7,7 +7,7 @@ void Terminal::update() {
   readKeyPress(&c);
   display(c);
 
-  if (c == 'q') {
+  if (c == CTRL_KEY('q')) {
     display("Quitting.");
     stop();
   }

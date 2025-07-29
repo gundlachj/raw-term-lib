@@ -4,9 +4,7 @@
 #include <termios.h>
 #include <string>
 
-#ifndef CTRL_KEY
 #define CTRL_KEY(k) ((k) & 0x1f)
-#endif
 
 class RawTerminal {
 private:
