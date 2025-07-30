@@ -3,7 +3,13 @@
 
 #include <termios.h>
 
+#ifndef CTRL_KEY
 #define CTRL_KEY(k) ((k) & 0x1f)
+#endif
+
+#ifndef SCREEN_BUF_INIT
+#define SCREEN_BUF_INIT {NULL, 0}
+#endif
 
 class RawTerminal {
 private:
@@ -18,10 +24,20 @@ private:
   int screen_rows;
   int screen_cols;
 
+  struct screen_buf {
+    char *buf;
+    int len;
+  } screen;
+
   void enableRawMode();
   void disableRawMode();
 
   int getWindowSize();
+
+  void screenAppend(const char *s, int len);
+  void screenFreeBuffer();
+
+  void writeScreen();
 
   virtual void start();
 

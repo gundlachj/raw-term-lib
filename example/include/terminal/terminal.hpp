@@ -5,6 +5,8 @@
 
 class Terminal : public RawTerminal {
 private:
+  char c = 0;
+
   void start();
   void update();
 };

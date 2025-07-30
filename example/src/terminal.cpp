@@ -4,14 +4,16 @@ void Terminal::start() {}
 
 void Terminal::update() {
   refreshScreen();
+  display(this->c);
 
-  char c;
-  readKeyPress(&c);
-  display(c);
+  this->c = 0;
+  while (this->c == 0) {
+    readKeyPress(&this->c);
 
-  if (c == CTRL_KEY('q')) {
-    display("Quitting.");
-    stop();
+    if (this->c == CTRL_KEY('q')) {
+      display("Quitting.");
+      stop();
+    }
   }
-  c = 0;
+
 }

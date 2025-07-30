@@ -4,6 +4,8 @@
 #include <cctype>
 #include <cerrno>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include <sys/ioctl.h>
 #include <termios.h>
@@ -202,6 +204,27 @@ int RawTerminal::getWindowSize() {
   return 0;
 }
 
+void RawTerminal::screenAppend(const char *s, int len) {
+  // Allocate new memory or extend the current memory space
+  // of the screen buf to allow for an addition of characters.
+  char *newBuffer = (char *) realloc(this->screen.buf, this->screen.len + len);
+
+  // Check if the reallocate operation failed
+  if (newBuffer == NULL) return;
+
+  // Copy the new string to the end of the old buffer
+  memcpy(&newBuffer[this->screen.len], s, len);
+
+  // Set the screen to the new buffer
+  // and update the length.
+  this->screen.buf = newBuffer;
+  this->screen.len += len;
+}
+
+void RawTerminal::screenFreeBuffer() {
+  free(this->screen.buf);
+}
+
 // TODO: Implement configuration for setting flags
 void RawTerminal::setFlag(int f_num) {}
 
@@ -253,8 +276,25 @@ int RawTerminal::getCursorPosition(int *row, int *col) {
 }
 
 void RawTerminal::refreshScreen() {
-  write(STDOUT_FILENO, "\x1b[2J", 4);
-  write(STDOUT_FILENO, "\x1b[H", 3);
+  this->screen = SCREEN_BUF_INIT;
+
+  // Hide the cursor
+  screenAppend("\x1b[?25l", 6);
+
+  // Clear the screen
+  screenAppend("\x1b[2J", 4);
+  // Move the cursor to the top
+  screenAppend("\x1b[H", 3);
+
+  // Show the cursor
+  screenAppend("\x1b[?25h", 6);
+
+  writeScreen();
+  screenFreeBuffer();
+}
+
+void RawTerminal::writeScreen() {
+  write(STDOUT_FILENO, this->screen.buf, this->screen.len);
 }
 
 // TODO: Implement an actual display
@@ -288,6 +328,7 @@ void RawTerminal::run() {
   while (this->running) {
     // TODO: Implement time frames system
     update();
+    writeScreen();
   }
 }
 
